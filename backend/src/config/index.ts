@@ -11,7 +11,7 @@ export const config = {
 	httpbin: {
 		baseUrl: 'https://httpbin.org',
 		endpoint: '/anything',
-		interval: 5 * 60 * 1000,
+		interval: 60 * 1000,
 	},
 	logging: {
 		level: process.env.LOG_LEVEL || 'info',
