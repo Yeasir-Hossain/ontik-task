@@ -9,10 +9,29 @@ import { HttpResponse } from '@/types';
 import { HttpResponseDetailsDialog } from '@/components/HttpResponseDetailsDialog';
 import { fetchResponses } from '@/lib/api';
 import { getSocket } from '@/lib/socket';
+import Loading from '@/components/Loader';
 
 export default function HttpResponseTable() {
   const [selectedResponse, setSelectedResponse] = useState<HttpResponse | null>(null);
   const [responses, setResponses] = useState<HttpResponse[]>([])
+  const [pagination, setPagination] = useState({
+    total: 1,
+    page: 1,
+    pages: 1
+  })
+  const [loading, setLoading] = useState(true)
+
+  const loadResponses = async (page?: number) => {
+    try {
+      const { data, pagination: paginationData } = await fetchResponses(page)
+      setResponses(data)
+      setPagination(paginationData)
+    } catch (error) {
+      console.error('Failed to fetch responses', error)
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const columns: ColumnDef<HttpResponse>[] = [
     {
@@ -51,15 +70,15 @@ export default function HttpResponseTable() {
     }
   ];
 
+  const handlePaginationChange = (newPage: { page: number }) => {
+    loadResponses(newPage.page)
+    setPagination(prev => ({
+      ...prev,
+      page: newPage.page
+    }))
+  }
+
   useEffect(() => {
-    const loadResponses = async () => {
-      try {
-        const { data } = await fetchResponses()
-        setResponses(data)
-      } catch (error) {
-        console.error('Failed to fetch responses', error)
-      }
-    }
 
     loadResponses()
 
@@ -71,8 +90,8 @@ export default function HttpResponseTable() {
     return () => {
       socket.off('newResponse')
     }
-  }, [])
 
+  }, [])
 
   return (
     <Card className="w-full container my-10">
@@ -80,12 +99,21 @@ export default function HttpResponseTable() {
         <CardTitle>HTTP Monitor Responses</CardTitle>
       </CardHeader>
       <CardContent>
-        <DataTable columns={columns} data={responses} />
+        {loading ? (
+          <div className="flex justify-center items-center h-24">
+            <Loading className="animate-spin h-7 w-7" />
+          </div>
+        ) :
+          <>
+            <DataTable columns={columns} data={responses} pagination={pagination} onPaginationChange={handlePaginationChange} />
 
-        <HttpResponseDetailsDialog
-          response={selectedResponse}
-          onClose={() => setSelectedResponse(null)}
-        />
+            <HttpResponseDetailsDialog
+              response={selectedResponse}
+              onClose={() => setSelectedResponse(null)}
+            />
+          </>
+        }
+
       </CardContent>
     </Card>
   );

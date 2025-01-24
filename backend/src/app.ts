@@ -28,6 +28,12 @@ export const createApp = async () => {
 	}));
 	app.use(express.json());
 
+	app.get('/', (_req: Request, res: Response) => {
+		res.status(404).send({
+			message: "Hello, its me",
+		});
+	});
+
 	// Routes
 	app.use(routes);
 
