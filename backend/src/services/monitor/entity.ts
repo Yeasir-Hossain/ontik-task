@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { Request, Response } from 'express';
 import ResponseModel from '../../models/Response';
 import { logger } from '../../utils/logger';
 
@@ -24,4 +24,4 @@ export const getResponses = async (req: Request, res: Response) => {
 		logger.error('Error fetching responses', { error });
 		res.status(500).json({ error: 'Internal server error' });
 	}
-}
+};

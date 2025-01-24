@@ -13,7 +13,7 @@ export class MonitoringService {
 		this.eventEmitter = eventEmitter;
 		this.request = axios.create({
 			baseURL: config.httpbin.baseUrl
-		})
+		});
 	}
 
 	private generateRandomPayload(): Record<string, any> {
