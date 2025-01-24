@@ -26,7 +26,7 @@ jobs:
 
       - name: Backend - Install Dependencies
         working-directory: ./backend
-        run: npm ci
+        run: npm install
 
       - name: Backend - Run Linter
         working-directory: ./backend
@@ -55,7 +55,7 @@ jobs:
 
       - name: Frontend - Install Dependencies
         working-directory: ./frontend
-        run: npm ci
+        run: npm install
 
       - name: Frontend - Run Linter
         working-directory: ./frontend
