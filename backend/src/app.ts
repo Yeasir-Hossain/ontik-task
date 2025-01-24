@@ -13,10 +13,12 @@ import { MonitoringService } from './services/monitor/service';
 export const createApp = async () => {
 	const app = express();
 	const httpServer = createServer(app);
+	console.log(config.corsOrigin);
 	const io = new Server(httpServer, {
 		cors: {
 			origin: config.corsOrigin,
-			methods: ['GET', 'POST']
+			methods: ['GET', 'POST'],
+			credentials: true
 		}
 	});
 
