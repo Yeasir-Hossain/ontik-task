@@ -51,7 +51,7 @@ pnpm install
 pnpm run dev
 
 # Install dependencies frontend from root directory
-cd fronend
+cd frontend
 pnpm install
 
 # Run frontend
@@ -88,3 +88,8 @@ pnpm run dev
 - Used Jest to test the backend services core functionality
 - Integration tests for API endpoints
 - Socket connection tests
+
+
+## Deployment
+- Frontend: https://ontik-task.vercel.app/
+- Backend: https://ontik-task.onrender.com
