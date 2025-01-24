@@ -1,0 +1,60 @@
+import express from 'express';
+import cors from 'cors';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+import { EventEmitter } from 'events';
+import { config } from './config';
+import { logger } from './utils/logger';
+
+// internal imports
+import routes from './routes';
+import { MonitoringService } from './services/monitor/entity';
+
+export const createApp = async () => {
+	const app = express();
+	const httpServer = createServer(app);
+	const io = new Server(httpServer, {
+		cors: {
+			origin: config.corsOrigin,
+			methods: ['GET', 'POST']
+		}
+	});
+
+	// Middleware
+	app.use(cors({
+		origin: config.corsOrigin,
+		credentials: true,
+		methods: "GET,PUT,PATCH,POST,DELETE"
+	}));
+	app.use(express.json());
+
+	// Routes
+	app.use(routes);
+
+	// Event handling for real-time updates
+	const eventEmitter = new EventEmitter();
+	const monitoringService = new MonitoringService(eventEmitter);
+
+	// Socket.IO connection handling
+	io.on('connection', (socket) => {
+		logger.info('Client connected');
+		socket.on('disconnect', () => {
+			logger.info('Client disconnected');
+		});
+	});
+
+	// Broadcast new responses to connected clients
+	eventEmitter.on('newResponse', (response) => {
+		io.emit('newResponse', response);
+	});
+
+	// Start monitoring
+	setInterval(() => {
+		monitoringService.monitorEndpoint();
+	}, config.httpbin.interval);
+
+	// Initial monitoring call
+	monitoringService.monitorEndpoint();
+
+	return { app, httpServer };
+};

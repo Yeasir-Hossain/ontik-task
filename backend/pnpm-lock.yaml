@@ -33,6 +33,9 @@ importers:
         specifier: ^3.8.0
         version: 3.17.0
     devDependencies:
+      '@types/cors':
+        specifier: ^2.8.17
+        version: 2.8.17
       '@types/express':
         specifier: ^4.17.13
         version: 4.17.21

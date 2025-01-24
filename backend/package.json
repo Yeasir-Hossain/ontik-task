@@ -8,8 +8,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "lint": "eslint . --ext .ts",
-    "test": "jest",
-    "test:coverage": "jest --coverage"
+    "test": "jest --coverage"
   },
   "keywords": [],
   "author": "yeasir06@gmail.com",
@@ -24,6 +23,7 @@
     "winston": "^3.8.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "^4.17.13",
     "@types/jest": "^29.5.14",
     "@types/node": "^18.0.0",

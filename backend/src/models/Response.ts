@@ -21,4 +21,5 @@ const ResponseSchema = new Schema({
 	timestamps: true,
 });
 
-export const Response = mongoose.model<HttpResponse & Document>('Response', ResponseSchema);
+const ResponseModel = mongoose.model<HttpResponse & Document>('Response', ResponseSchema);
+export default ResponseModel;
