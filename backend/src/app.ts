@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
@@ -8,7 +8,7 @@ import { logger } from './utils/logger';
 
 // internal imports
 import routes from './routes';
-import { MonitoringService } from './services/monitor/entity';
+import { MonitoringService } from './services/monitor/service';
 
 export const createApp = async () => {
 	const app = express();
@@ -30,6 +30,13 @@ export const createApp = async () => {
 
 	// Routes
 	app.use(routes);
+
+	// Handle undefined reoutes
+	app.use("*", (_req: Request, res: Response) => {
+		res.status(404).send({
+			message: "Page not found",
+		});
+	});
 
 	// Event handling for real-time updates
 	const eventEmitter = new EventEmitter();
